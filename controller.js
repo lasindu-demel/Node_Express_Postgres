@@ -61,6 +61,16 @@ const deleteUser = (req,res) => {
         res.status(200).json(results.rows)
     })
 }
+//GET search users
+const getUserByName = (req,res) => {
+    const key = req.query.key
+pool.query('select * from users where name ilike $1',['%'+key+'%'],(error,results) => {
+    if(error){
+      throw error
+    }
+    res.status(200).json(results.rows)
+  })
+  }
 
 module.exports ={
     home,
@@ -69,4 +79,5 @@ module.exports ={
     createUser,
     updateUser,
     deleteUser,
+    getUserByName
 }
