@@ -2,7 +2,7 @@ const pool = require('./db')
 const bodyParser = require('body-parser')
 const express = require('express')
 const { req, res } = require('express')
-
+const { body, validationResult } = require('express-validator');
 //const app = express()
 
 
@@ -32,6 +32,10 @@ const getUserById = (req,res) => {
 //Post create user
 const createUser = (req,res) => {
     const {name,email} = req.body
+    const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
     pool.query('insert into users(name,email) values ($1,$2) returning *',[name,email],(error,results) => {
         if(error){
             throw error
